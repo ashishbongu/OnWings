@@ -1,4 +1,4 @@
-# ✈️ OnWings.v2
+# ✈️ OnWings
 
 A modern, full-featured flight booking web application built with React, Redux Toolkit, and Vite. OnWings provides an intuitive interface for searching flights, booking tickets, and managing reservations with stunning visual effects and smooth animations.
 
@@ -38,8 +38,8 @@ A modern, full-featured flight booking web application built with React, Redux T
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/Ganesh172919/OnWings.v2.git
-cd OnWings.v2
+git clone https://github.com/ashishbongu/OnWings
+cd OnWings
 ```
 
 2. Install dependencies:
@@ -67,7 +67,7 @@ http://localhost:5000
 ## 🏗️ Project Structure
 
 ```
-OnWings.v2/
+OnWings/
 ├── public/              # Static assets
 ├── src/
 │   ├── api/            # API and mock data services
@@ -199,7 +199,7 @@ Configured with custom theme settings and plugins for enhanced styling capabilit
 The application currently uses mock data. For production, configure:
 - API endpoints
 - Payment gateway credentials
-- Authentication services
+
 
 ## 🤝 Contributing
 
@@ -209,19 +209,6 @@ The application currently uses mock data. For production, configure:
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is private and maintained by Ganesh172919.
 
 
 
-## 🙏 Acknowledgments
-
-- React team for the amazing library
-- Vite for the blazing fast build tool
-- Tailwind CSS for the utility-first framework
-- All open-source contributors of the dependencies used
-
----
-
-**Built with ❤️ using React and Vite**
