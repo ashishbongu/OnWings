@@ -1,6 +1,6 @@
 # ✈️ OnWings
 
-A modern, full-featured flight booking web application built with React, Redux Toolkit, and Vite. OnWings provides an intuitive interface for searching flights, booking tickets, and managing reservations with stunning visual effects and smooth animations.
+A modern, full-featured flight booking web application built with React, Redux Toolkit, and Vite. OnWings provides an intuitive interface for searching flights, booking tickets, and managing reservations with stunning visual effects with 2D seat booking and smooth animations.
 
 ## 🌟 Features
 
