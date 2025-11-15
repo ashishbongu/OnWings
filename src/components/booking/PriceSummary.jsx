@@ -7,6 +7,7 @@ import {
   selectExtraBaggage, // Import the new selector
 } from "../../store/slices/bookingSlice";
 import { ArrowRight, Ticket, Briefcase } from "lucide-react";
+import { selectSearchParams } from "../../store/slices/flightSlice";
 
 // Mock prices
 const SEAT_FEE = 800;
@@ -21,6 +22,7 @@ const PriceSummary = ({ onConfirm }) => {
   const selectedSeats = useSelector(selectSelectedSeats);
   const passengers = useSelector(selectPassengers);
   const extraBaggage = useSelector(selectExtraBaggage); // Get baggage info
+  const searchParams = useSelector(selectSearchParams);
 
   // 3. State for coupons
   const [couponCode, setCouponCode] = useState("");
@@ -67,9 +69,23 @@ const PriceSummary = ({ onConfirm }) => {
 
   // 6. Check if booking is allowed
   const seatsSelected = selectedSeats.length === passengers.length;
-  const passengerInfoFilled = passengers.every(
-    (p) => p.firstName && p.lastName && p.age && p.gender
-  );
+  const adultCount = Number(searchParams?.adults || 1);
+  const childCount = Number(searchParams?.children || 0);
+  const isPassengerValid = (p, idx) => {
+    if (!p.firstName || !p.lastName || !p.gender || !p.age) return false;
+    const ageNum = parseInt(p.age, 10);
+    if (isNaN(ageNum)) return false;
+    // Base age sanity
+    if (ageNum < 0 || ageNum > 120) return false;
+    // Category-specific
+    const isAdult = idx < adultCount;
+    if (isAdult) return ageNum >= 18;
+    // child indices follow
+    if (idx < adultCount + childCount) return ageNum >= 5 && ageNum <= 17;
+    // Default to adult if extra passengers
+    return ageNum >= 18;
+  };
+  const passengerInfoFilled = passengers.every((p, idx) => isPassengerValid(p, idx));
 
   return (
     <div className="bg-black border border-red-800/50 p-4 sm:p-6 rounded shadow-lg text-white/90 md:sticky md:top-24">
@@ -168,8 +184,7 @@ const PriceSummary = ({ onConfirm }) => {
       </button>
       {(!seatsSelected || !passengerInfoFilled) && (
         <p className="text-xs text-center text-yellow-500 mt-2">
-          Please fill all passenger details and select {passengers.length}{" "}
-          seat(s).
+          Please complete all passenger details with valid ages and select {passengers.length} seat(s).
         </p>
       )}
     </div>

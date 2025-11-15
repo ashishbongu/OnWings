@@ -138,6 +138,9 @@ const FlightSearchForm = () => {
         returnDate: isRoundTrip ? returnDate : null,
         tripType,
         passengers,
+        adults,
+        children,
+        totalPassengers
       })
     );
     navigate("/flights");

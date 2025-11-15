@@ -9,6 +9,7 @@ import {
 } from '../store/slices/bookingSlice'
 import PaymentForm from '../components/booking/PaymentForm'
 import { ArrowLeft } from 'lucide-react'
+import { selectSearchParams } from '../store/slices/flightSlice'
 
 // Mock prices (same as PriceSummary)
 const SEAT_FEE = 800;
@@ -21,6 +22,7 @@ const PaymentPage = () => {
   const flight = useSelector(selectCurrentFlight);
   const selectedSeats = useSelector(selectSelectedSeats); // <-- 2. FIX: Changed to plural
   const passengers = useSelector(selectPassengers);
+  const searchParams = useSelector(selectSearchParams);
 
   if (!flight) {
     return (
@@ -46,10 +48,15 @@ const PaymentPage = () => {
   }).format(price);
 
   const handlePayment = async () => {
+    const adultCount = Number(searchParams?.adults || 1);
+    const detailedPassengers = passengers.map((p, idx) => ({
+      ...p,
+      category: idx < adultCount ? "Adult" : "Child",
+    }));
     const bookingDetails = {
       flight,
-      passengers,
-      selectedSeats, // <-- 4. FIX: Pass plural
+      passengers: detailedPassengers,
+      selectedSeats,
       total,
     };
     

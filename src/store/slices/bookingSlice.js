@@ -27,7 +27,7 @@ export const fetchFlightById = (flightId) => (dispatch) => {
 const initialState = {
   flight: null,
   // 1. ADD new fields to the passenger
-  passengers: [{ id: 1, firstName: "", lastName: "", age: "", gender: "" }],
+  passengers: [{ id: 1, firstName: "", lastName: "", age: "", gender: "", category: "Adult" }],
   // 2. CHANGE selectedSeat: null to selectedSeats: []
   selectedSeats: [],
   status: "idle",
@@ -56,7 +56,7 @@ const bookingSlice = createSlice({
       state.status = action.payload;
     },
     addPassenger: (state) => {
-      const newId = state.passengers.length + 1;
+      const newId = state.passengers.length > 0 ? Math.max(...state.passengers.map(p => p.id)) + 1 : 1;
       // 3. ADD new fields when adding a passenger
       state.passengers.push({
         id: newId,
@@ -64,6 +64,7 @@ const bookingSlice = createSlice({
         lastName: "",
         age: "",
         gender: "",
+        category: "Adult",
       });
     },
     updatePassenger: (state, action) => {
@@ -91,7 +92,7 @@ const bookingSlice = createSlice({
     clearBooking: (state) => {
       state.flight = null;
       state.passengers = [
-        { id: 1, firstName: "", lastName: "", age: "", gender: "" },
+        { id: 1, firstName: "", lastName: "", age: "", gender: "", category: "Adult" },
       ];
       // 5. UPDATE to clear selectedSeats
       state.selectedSeats = [];
@@ -111,7 +112,7 @@ const bookingSlice = createSlice({
         state.lastBooking = action.payload;
         state.flight = null;
         state.passengers = [
-          { id: 1, firstName: "", lastName: "", age: "", gender: "" },
+          { id: 1, firstName: "", lastName: "", age: "", gender: "", category: "Adult" },
         ];
         // 5. UPDATE to clear selectedSeats
         state.selectedSeats = [];

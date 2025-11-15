@@ -3,24 +3,40 @@
 
 // Attempts to convert unknown time strings (e.g., "08:45 AM") into a valid ISO string
 const toISO = (val) => {
+  if (!val) return new Date().toISOString();
+  
+  // Try direct conversion first
   const direct = new Date(val);
-  if (!isNaN(direct.getTime())) return direct.toISOString();
-  const str = String(val || "");
+  if (!isNaN(direct.getTime()) && direct.getFullYear() > 2000) {
+    return direct.toISOString();
+  }
+  
+  // Try time string parsing
+  const str = String(val).trim();
   const m = str.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
-  const base = new Date();
+  
   if (m) {
+    const base = new Date();
     let h = parseInt(m[1], 10);
     const min = parseInt(m[2], 10);
     const ap = m[3];
+    
     if (ap) {
       const up = ap.toUpperCase();
       if (up === "PM" && h < 12) h += 12;
       if (up === "AM" && h === 12) h = 0;
     }
+    
     base.setHours(h, min, 0, 0);
-    return base.toISOString();
+    const result = new Date(base);
+    
+    if (!isNaN(result.getTime())) {
+      return result.toISOString();
+    }
   }
-  return base.toISOString();
+  
+  // Fallback to current time
+  return new Date().toISOString();
 };
 
 const parseLocation = (val) => {
@@ -42,6 +58,30 @@ export const transformBookingToTrip = (booking) => {
   const fromLoc = parseLocation(flight.from);
   const toLoc = parseLocation(flight.to);
 
+  const departAt = toISO(flight.departure || flight.departAt);
+  const arriveAt = toISO(flight.arrival || flight.arriveAt);
+  const nowMs = Date.now();
+  const status = (() => {
+    try {
+      const departDate = new Date(departAt);
+      if (isNaN(departDate.getTime())) return 'Upcoming';
+      return departDate.getTime() < nowMs ? 'Completed' : 'Upcoming';
+    } catch {
+      return 'Upcoming';
+    }
+  })();
+
+  // include full passengers list with categories if present (non-breaking extra field)
+  const passengers = Array.isArray(booking.passengers)
+    ? booking.passengers.map((p) => ({
+        firstName: p.firstName || '',
+        lastName: p.lastName || '',
+        age: p.age || '',
+        gender: p.gender || '',
+        category: p.category || 'Adult',
+      }))
+    : [];
+
   return {
     bookingId: booking.bookingId,
     passenger,
@@ -49,11 +89,12 @@ export const transformBookingToTrip = (booking) => {
     flightNo: String(flight.id || flight.flightNo || 'N/A'),
     from: fromLoc,
     to: toLoc,
-    departAt: toISO(flight.departure),
-    arriveAt: toISO(flight.arrival),
+    departAt,
+    arriveAt,
     amount: Number(booking.total || 0),
     seat,
-    status: 'Upcoming',
+    status,
+    passengers,
   };
 };
 
