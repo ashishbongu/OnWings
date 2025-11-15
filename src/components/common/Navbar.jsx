@@ -107,6 +107,7 @@ const Navbar = () => {
         >
           <NavLink to="/luggage">Luggage</NavLink>
           <NavLink to="/search">Find a Flight</NavLink>
+          <NavLink to="/private-booking">Private Jets</NavLink>
           <div className="w-px h-6 bg-gray-600 mx-2"></div>
           <AuthButton onClick={handleLoginClick}>Log In</AuthButton>
           <AuthButton onClick={handleSignupClick} isPrimary>
@@ -140,7 +141,7 @@ const Navbar = () => {
             <div className="px-4 pt-4 pb-6 space-y-3">
               <motion.div variants={linkVariants}>
                 <Link
-                  to="/"
+                  to="/luggage"
                   onClick={() => setOpen(false)}
                   className="block text-white text-lg font-medium py-2 px-2 rounded hover:bg-white/5"
                 >
@@ -149,11 +150,20 @@ const Navbar = () => {
               </motion.div>
               <motion.div variants={linkVariants}>
                 <Link
-                  to="/"
+                  to="/search"
                   onClick={() => setOpen(false)}
                   className="block text-white text-lg font-medium py-2 px-2 rounded hover:bg-white/5"
                 >
                   Find a Flight
+                </Link>
+              </motion.div>
+              <motion.div variants={linkVariants}>
+                <Link
+                  to="/private-booking"
+                  onClick={() => setOpen(false)}
+                  className="block text-white text-lg font-medium py-2 px-2 rounded hover:bg-white/5"
+                >
+                  Private Jets
                 </Link>
               </motion.div>
               <div className="pt-2 border-t border-white/10">

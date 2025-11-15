@@ -11,6 +11,7 @@ const BookingPage = lazy(() => import("./pages/BookingPage"));
 const PaymentPage = lazy(() => import("./pages/PaymentPage"));
 const ConfirmationPage = lazy(() => import("./pages/ConfirmationPage"));
 const MyTrips = lazy(() => import("./pages/MyTrips"));
+const PrivateBookingPage = lazy(() => import("./pages/PrivateBookingPage"));
 const LoginModal = lazy(() => import("./components/auth/LoginModal"));
 const SignupModal = lazy(() => import("./components/auth/SignupModal"));
 
@@ -40,6 +41,7 @@ function App() {
               element={<ConfirmationPage />}
             />
             <Route path="/my-trips" element={<MyTrips />} />
+            <Route path="/private-booking" element={<PrivateBookingPage />} />
           </Routes>
         </Suspense>
       </main>
