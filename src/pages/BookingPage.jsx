@@ -8,8 +8,11 @@ import {
   clearBooking,
   // 1. Import new selectors
   selectPassengers,
-  selectSelectedSeats
+  selectSelectedSeats,
+  addPassenger,
+  removePassenger
 } from '../store/slices/bookingSlice'
+import { selectSearchParams } from '../store/slices/flightSlice'
 import { Loader2 } from 'lucide-react'
 import PassengerForm from '../components/booking/PassengerForm'
 import SeatMap from '../components/booking/SeatMap'
@@ -27,6 +30,7 @@ const BookingPage = () => {
   // 3. Get passengers and seats for validation
   const passengers = useSelector(selectPassengers);
   const selectedSeats = useSelector(selectSelectedSeats);
+  const searchParams = useSelector(selectSearchParams);
 
   useEffect(() => {
     if (flightId) {
@@ -37,13 +41,31 @@ const BookingPage = () => {
     }
   }, [dispatch, flightId]);
 
-  const handleBooking = () => {
-    // 4. Validate that all passengers have a seat
-    if (selectedSeats.length !== passengers.length) {
-      alert(`Please select a seat for all ${passengers.length} passengers.`);
-      return;
+  // Sync passenger count from search params (adults + children) → booking passengers array
+  useEffect(() => {
+    const adults = Number(searchParams?.adults || 1);
+    const children = Number(searchParams?.children || 0);
+    const desired = Math.max(1, adults + children);
+    const current = passengers.length;
+    
+    if (desired > current) {
+      // Add required passengers
+      for (let i = 0; i < desired - current; i++) {
+        dispatch(addPassenger());
+      }
+    } else if (desired < current) {
+      // Remove extras from the end
+      const toRemove = current - desired;
+      for (let i = 0; i < toRemove; i++) {
+        if (passengers.length > desired) {
+          const lastPassenger = passengers[passengers.length - 1];
+          dispatch(removePassenger(lastPassenger.id));
+        }
+      }
     }
-    // TODO: Add validation for passenger names/age
+  }, [dispatch, searchParams?.adults, searchParams?.children]);
+
+  const handleBooking = () => {
     navigate('/payment');
   }
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectPassengers,
@@ -8,14 +8,29 @@ import {
 } from "../../store/slices/bookingSlice";
 import { UserPlus, X, AlertCircle } from "lucide-react";
 import { validateName, validateAge, validateGender } from "../../utils/validation";
+import { selectSearchParams } from "../../store/slices/flightSlice";
 
 const PassengerForm = () => {
   const passengers = useSelector(selectPassengers);
+  const searchParams = useSelector(selectSearchParams);
   const dispatch = useDispatch();
   const [errors, setErrors] = useState({});
 
+  const adultCount = Number(searchParams?.adults || 1);
+  const childCount = Number(searchParams?.children || 0);
+
+  const getCategoryByIndex = (idx) => {
+    return idx < adultCount ? "Adult" : (idx < adultCount + childCount ? "Child" : "Adult");
+  };
+
   const handleUpdate = (id, field, value) => {
+    const idx = passengers.findIndex(p => p.id === id);
+    const category = getCategoryByIndex(idx);
     dispatch(updatePassenger({ id, field, value }));
+    // Also set category
+    if (field === 'age') {
+      dispatch(updatePassenger({ id, field: 'category', value: category }));
+    }
     // Clear error for this field when user starts typing
     setErrors(prev => ({
       ...prev,
@@ -34,6 +49,18 @@ const PassengerForm = () => {
         break;
       case "age":
         error = validateAge(value);
+        if (!error) {
+          const idx = passengers.findIndex((pp) => pp.id === id);
+          const category = getCategoryByIndex(idx);
+          const ageNum = parseInt(value, 10);
+          if (isNaN(ageNum) || ageNum < 0) {
+            error = "Invalid age";
+          } else if (category === "Adult" && ageNum < 18) {
+            error = "Adult must be 18+";
+          } else if (category === "Child" && (ageNum < 5 || ageNum > 17)) {
+            error = "Child age must be 5-17";
+          }
+        }
         break;
       case "gender":
         error = validateGender(value);
@@ -130,7 +157,7 @@ const PassengerForm = () => {
 
           <div className="sm:col-span-1">
             <label className="block text-sm font-bold text-black/80 text-left">
-              Age
+              Age {`(${getCategoryByIndex(index)})`}
             </label>
             <input
               type="number"
@@ -140,6 +167,8 @@ const PassengerForm = () => {
               value={p.age}
               onChange={(e) => handleUpdate(p.id, "age", e.target.value)}
               onBlur={(e) => handleBlur(p.id, "age", e.target.value)}
+              min={getCategoryByIndex(index) === "Adult" ? 18 : 5}
+              max={getCategoryByIndex(index) === "Child" ? 17 : 120}
             />
             {getError(p.id, "age") && (
               <div className="flex items-center mt-1 text-red-600 text-xs">
