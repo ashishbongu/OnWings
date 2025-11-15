@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/common/Navbar";
+import Footer from "./components/layout/Footer";
 import FlightLoader from "./components/common/FlightLoader";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -45,6 +46,7 @@ function App() {
           </Routes>
         </Suspense>
       </main>
+      <Footer />
     </div>
   );
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import { Send } from 'lucide-react'
 
 const FlightTicket = ({ booking }) => {
-  const { flight, passengers, selectedSeat, total, bookingId } = booking;
+  const { flight, passengers, selectedSeats, total, bookingId } = booking;
   
   const formatPrice = (price) => new Intl.NumberFormat('en-IN', {
     style: 'currency', currency: 'INR'
@@ -37,7 +37,11 @@ const FlightTicket = ({ booking }) => {
         </div>
         <div>
           <p className="text-sm text-gray-500">Seat</p>
-          <p className="text-xl font-medium">{selectedSeat}</p>
+          <p className="text-xl font-medium">
+            {selectedSeats && selectedSeats.length > 0 
+              ? selectedSeats.join(', ') 
+              : 'N/A'}
+          </p>
         </div>
         <div>
           <p className="text-sm text-gray-500">Total Paid</p>
