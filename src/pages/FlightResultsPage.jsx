@@ -91,7 +91,7 @@ const FlightResultsPage = () => {
   }
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 mt-16">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6">
