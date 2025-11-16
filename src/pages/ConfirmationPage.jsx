@@ -50,7 +50,7 @@ const ConfirmationPage = () => {
   }
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto pt-24 py-10 px-4">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-8 text-white/90">
           <CheckCircle className="h-16 w-16 text-green-500 mx-auto" />

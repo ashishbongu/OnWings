@@ -110,6 +110,7 @@ const Navbar = () => {
         >
           <NavLink to="/luggage">Luggage</NavLink>
           <NavLink to="/search">Find a Flight</NavLink>
+          <NavLink to="/my-trips">My Trips</NavLink>
           <NavLink to="/private-booking">Private Jets</NavLink>
           <div className="w-px h-6 bg-gray-600 mx-2"></div>
           <AuthButton onClick={handleLoginClick}>Log In</AuthButton>
@@ -160,6 +161,16 @@ const Navbar = () => {
                   Find a Flight
                 </Link>
               </motion.div>
+              <motion.div variants={linkVariants}>
+                <Link
+                  to="/my-trips"
+                  onClick={() => setOpen(false)}
+                  className="block text-white text-lg font-medium py-2 px-2 rounded hover:bg-white/5"
+                >
+                  MyTrips
+                </Link>
+              </motion.div>
+              
               <motion.div variants={linkVariants}>
                 <Link
                   to="/private-booking"
